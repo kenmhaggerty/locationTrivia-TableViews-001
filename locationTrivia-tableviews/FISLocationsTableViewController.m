@@ -22,6 +22,8 @@
     [self.tableView setAccessibilityLabel:@"Locations Table"];
     [self.tableView setAccessibilityIdentifier:@"Locations Table"];
     
+    [self setLocations:[FISLocation testData]];
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -38,22 +40,42 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    return 1;
+//    return 1;
+    return self.locations.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    return self.locations.count;
+//    return self.locations.count;
+    if (section >= self.locations.count) return 0;
+    
+    return ((FISLocation *)[self.locations objectAtIndex:section]).trivia.count;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    
+    if (section >= self.locations.count) return nil;
+    
+    return ((FISLocation *)[self.locations objectAtIndex:section]).name;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"locationCell" forIndexPath:indexPath];
     
-    FISLocation *location = [self.locations objectAtIndex:indexPath.row];
-    [cell.textLabel setText:location.name];
-    [cell.detailTextLabel setText:[NSString stringWithFormat:@"%lu", location.trivia.count]];
+//    FISLocation *location = [self.locations objectAtIndex:indexPath.row];
+//    [cell.textLabel setText:location.name];
+//    [cell.detailTextLabel setText:[NSString stringWithFormat:@"%lu", location.trivia.count]];
+    
+    FISLocation *location = [self.locations objectAtIndex:indexPath.section];
+    FISTrivium *trivium = [location.trivia objectAtIndex:indexPath.row];
+    [cell.textLabel setText:trivium.content];
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 /*

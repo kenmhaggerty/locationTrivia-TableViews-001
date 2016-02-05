@@ -21,4 +21,6 @@
 
 - (FISTrivium *)triviumWithMostLikes;
 
++ (NSArray *)testData;
+
 @end
