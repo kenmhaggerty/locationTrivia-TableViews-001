@@ -28,7 +28,7 @@
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,43 +40,45 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-//    return 1;
-    return self.locations.count;
+    return 1;
+    
+//    return self.locations.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-//    return self.locations.count;
-    if (section >= self.locations.count) return 0;
+    return self.locations.count;
     
-    return ((FISLocation *)[self.locations objectAtIndex:section]).trivia.count;
+//    if (section >= self.locations.count) return 0;
+//    
+//    return ((FISLocation *)[self.locations objectAtIndex:section]).trivia.count;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    
-    if (section >= self.locations.count) return nil;
-    
-    return ((FISLocation *)[self.locations objectAtIndex:section]).name;
-}
+//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+//    
+//    if (section >= self.locations.count) return nil;
+//    
+//    return ((FISLocation *)[self.locations objectAtIndex:section]).name;
+//}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"locationCell" forIndexPath:indexPath];
     
-//    FISLocation *location = [self.locations objectAtIndex:indexPath.row];
-//    [cell.textLabel setText:location.name];
-//    [cell.detailTextLabel setText:[NSString stringWithFormat:@"%lu", location.trivia.count]];
+    FISLocation *location = [self.locations objectAtIndex:indexPath.row];
+    [cell.textLabel setText:location.name];
+    [cell.detailTextLabel setText:[NSString stringWithFormat:@"%lu", location.trivia.count]];
     
-    FISLocation *location = [self.locations objectAtIndex:indexPath.section];
-    FISTrivium *trivium = [location.trivia objectAtIndex:indexPath.row];
-    [cell.textLabel setText:trivium.content];
+//    FISLocation *location = [self.locations objectAtIndex:indexPath.section];
+//    FISTrivium *trivium = [location.trivia objectAtIndex:indexPath.row];
+//    [cell.textLabel setText:trivium.content];
     
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    
+//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//}
 
 /*
 // Override to support conditional editing of the table view.
@@ -85,6 +87,16 @@
     return YES;
 }
 */
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return UITableViewCellEditingStyleNone;
+}
+
+- (BOOL)tableView:(UITableView *)tableview shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return NO;
+}
 
 /*
 // Override to support editing the table view.
@@ -98,11 +110,15 @@
 }
 */
 
-/*
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+    
+    NSMutableArray *mutableCopy = [self.locations mutableCopy];
+    FISLocation *location = [mutableCopy objectAtIndex:fromIndexPath.row];
+    [mutableCopy removeObject:location];
+    [mutableCopy insertObject:location atIndex:toIndexPath.row];
+    [self setLocations:mutableCopy];
 }
-*/
 
 /*
 // Override to support conditional rearranging of the table view.
